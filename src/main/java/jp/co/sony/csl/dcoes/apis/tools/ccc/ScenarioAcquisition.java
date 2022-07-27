@@ -7,6 +7,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+
 import jp.co.sony.csl.dcoes.apis.common.ServiceAddress;
 import jp.co.sony.csl.dcoes.apis.common.util.vertx.VertxConfig;
 import jp.co.sony.csl.dcoes.apis.tools.ccc.impl.http_post.HttpPostScenarioAcquisitionImpl;
@@ -111,15 +112,27 @@ public class ScenarioAcquisition extends AbstractVerticle {
 				String account = req.headers().get("account");
 				String password = req.headers().get("password");
 				String unitId = req.headers().get("unitId");
-				impl_.acquireCurrent(account, password, unitId, resAcquire -> {
-					if (resAcquire.succeeded()) {
-						JsonObject result = resAcquire.result();
-						req.reply(result);
-					} else {
-						log.error("Communication failed with ServiceCenter ; " + resAcquire.cause());
-						req.fail(-1, resAcquire.cause().getMessage());
-					}
-				});
+				if(VertxConfig.config.getBoolean(Boolean.TRUE, "scenarioAcquisition", "useS3")){
+					impl_.acquireCurrentS3(unitId, resAcquireS3 -> {
+						if (resAcquireS3.succeeded()) {
+							JsonObject result = resAcquireS3.result();
+							log.info(result);
+							req.reply(result);
+						} else {
+							req.fail(-1, resAcquireS3.cause().getMessage());
+						}
+					});
+				} else {
+					impl_.acquireCurrent(account, password, unitId, resAcquire -> {
+						if (resAcquire.succeeded()) {
+							JsonObject result = resAcquire.result();
+							req.reply(result);
+						} else {
+							log.error("Communication failed with ServiceCenter ; " + resAcquire.cause());
+							req.fail(-1, resAcquire.cause().getMessage());
+						}
+					});
+				}
 			} else {
 				req.reply(null);
 			}
@@ -150,6 +163,16 @@ public class ScenarioAcquisition extends AbstractVerticle {
 		 * @param completionHandler the completion handler
 		 */
 		void acquireCurrent(String account, String password, String unitId, Handler<AsyncResult<JsonObject>> completionHandler);
+
+		/**
+		 * Gets SCENARIO From S3.
+		 * To be received by completionHandler's {@link AsyncResult#result()}.
+		 * @param completionHandler The completion handler
+		 * SCENARIO をS3から取得する.
+		 * completionHandler の {@link AsyncResult#result()} で受け取る.
+		 * @param completionHandler the completion handler
+		 */
+		void acquireCurrentS3(String unitId, Handler<AsyncResult<JsonObject>> completionHandler);
 	}
 
 }
