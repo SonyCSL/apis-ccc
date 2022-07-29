@@ -46,7 +46,7 @@
 		"sslTrustAll" : false,
 		"uri" : "/api/misc/scenario/currentData",
 		"requestTimeoutMsec" : 5000,
-		"useS3" : true,
+		"useS3" : false,
 		"accessInfoS3" : {
 			"accessKey" : "",
 			"secretAccessKey" : "",
