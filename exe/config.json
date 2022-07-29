@@ -68,7 +68,7 @@
 		"requestTimeoutMsec" : 5000
 	},
 	"deallogAcquisition" : {
-		"enabled" : true,
+		"enabled" : false,
 		"host" : "localhost",
 		"port" : 27018,
 		"ssl" : false,
