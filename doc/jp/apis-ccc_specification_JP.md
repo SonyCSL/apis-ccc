@@ -16,6 +16,7 @@
   - [**4.2. Deal Reporting**](#42-deal-reporting)
   - [**4.3. Scenario Acquisition**](#43-scenario-acquisition)
   - [**4.4. Policy Acquisition**](#44-policy-acquisition)
+  - [**4.5. Deallog Acquisition**](#45-deallog-acquisition)
 - [**5. 収集情報**](#5-収集情報)
   - [**5.1. Unit Data Reporting取得情報**](#51-unit-data-reporting取得情報)
   - [**5.2. Deal Reporting取得情報**](#52-deal-reporting取得情報)
@@ -110,7 +111,7 @@ apis-cccのServiceであるUnit Data ReportingはunitDataReporting.periodMsec (8
 
 ## **4.2. Deal Reporting**
 
-apis-cccのServiceであるDeal ReportingはdealReporting.periodMsec (8.1 config.json参照)間隔毎にapis-mainのServiceであるMediator Serviceに対してEvent Bus経由でRequestを送信し全電力融通情報をJSON形式で取得する。また、取得した情報はHTTPのPOSTメソッドを用いてJSON形式でサーバ等の外部Serviceに送信されMongoDBに保存される。(Mediator ServiceはVert.xが指定し、指定されたMediator ServiceはHazelcastの共有メモリから全電力融通情報を取得しDeal Reportingに送信する)
+apis-cccのServiceであるDeal ReportingはdealReporting.periodMsec (6.1 config.json参照)間隔毎にapis-mainのServiceであるMediator Serviceに対してEvent Bus経由でRequestを送信し全電力融通情報をJSON形式で取得する。また、取得した情報はHTTPのPOSTメソッドを用いてJSON形式でサーバ等の外部Serviceに送信されMongoDBに保存される。(Mediator ServiceはVert.xが指定し、指定されたMediator ServiceはHazelcastの共有メモリから全電力融通情報を取得しDeal Reportingに送信する)
 
 Deal Reportingの定期処理とは別に、電力融通に参加したapis-mainのMediator Service が電力融通完了後にTriggerをかけてDeal Reportingを経由して電力融通完了情報をMongoDBに書き込む処理もある。
 
@@ -136,6 +137,12 @@ apis-mainのServiceであるUser Service内のPolicy KeepingはPolicyファイ�
 
 ![](media/media/image7.png)  
 図4-4
+
+<br>
+
+## **4.5. Deallog Acquisition**
+
+apis-cccのServiceであるDeallog Acquisitionは毎日１回deallogAcquisition.executionTime (6.1 config.json参照)に設定された時刻に１日分の電力融通履歴情報をJSON形式で取得する。取得した情報はdealファイルとして作成し、サーバ等の外部Serviceに保管する。
 
 <br>
 
@@ -588,6 +595,38 @@ json形式のファイルでapis-cccの基本情報を設定する。起動時�
 <td>Scenarioファイルを取得するサーバ等の外部サービスのHTTP Requestタイムアウト時間</td>
 </tr>
 <tr class="odd">
+<td>scenarioAcquisition.accessInfoS3.accessKey</td>
+<td>Scenarioファイルを取得するS3のAccess Key</td>
+</tr>
+<tr class="even">
+<td>scenarioAcquisition.accessInfoS3.secretAccessKey</td>
+<td>Scenarioファイルを取得するS3のSecret Access Key</td>
+</tr>
+<tr class="odd">
+<td>scenarioAcquisition.accessInfoS3.regionName</td>
+<td>Scenarioファイルを取得するS3のRegion</td>
+</tr>
+<tr class="even">
+<td>scenarioAcquisition.accessInfoS3.endpointUrl</td>
+<td>Scenarioファイルを取得するS3のEndpoint</td>
+</tr>
+<tr class="odd">
+<td>scenarioAcquisition.accessInfoS3.bucketName</td>
+<td>Scenarioファイルを取得するS3のBucket</td>
+</tr>
+<tr class="even">
+<td>scenarioAcquisition.accessInfoS3.folderName</td>
+<td>Scenarioファイルを取得するS3のFolder</td>
+</tr>
+<tr class="odd">
+<td>scenarioAcquisition.accessInfoS3.filePrefix</td>
+<td>Scenarioファイルを取得するFile接頭辞</td>
+</tr>
+<tr class="even">
+<td>scenarioAcquisition.accessInfoS3.fileExtension</td>
+<td>Scenarioファイルを取得するFile拡張子</td>
+</tr>
+<tr class="odd">
 <td>policyAcquisition.host</td>
 <td>Policyファイルを取得するサーバ等の外部サービスのIP Address</td>
 </tr>
@@ -609,6 +648,68 @@ json形式のファイルでapis-cccの基本情報を設定する。起動時�
 <td><p>policyAcquisition.request</p>
 <p>TimeoutMsec</p></td>
 <td>Policyファイルを取得するサーバ等の外部サービスのHTTP Requestタイムアウト時間</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.host</td>
+<td>Deallogを取得するMongoDBのIP Address</td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.port</td>
+<td>Deallogを取得するMongoDBのPort番号</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.ssl</td>
+<td><p>Deallogを取得するMongoDBの外部サービス通信SSL</p>
+<p>&emsp;有効 : true</p>
+<p>&emsp;無効 : false</p></td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.database</td>
+<td>Deallogを取得するMongoDBのDB名</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.collection</td>
+<td>Deallogを取得するMongoDBのcollection</td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.executionTime</td>
+<td>Deallogを取得する毎日１回の実行時刻（HHmmss形式）</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.acquisitionTime</td>
+<td>Deallogを取得する範囲を設定する時刻（HHmmss形式）</td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.accessInfoS3.accessKey</td>
+<td>取得したDeallogのファイルを保存するS3のAccess Key</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.accessInfoS3.secretAccessKey</td>
+<td>取得したDeallogのファイルを保存するS3のSecret Access Key</td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.accessInfoS3.regionName</td>
+<td>取得したDeallogのファイルを保存するS3のRegion</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.accessInfoS3.endpointUrl</td>
+<td>取得したDeallogのファイルを保存するS3のEndpoint</td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.accessInfoS3.bucketName</td>
+<td>取得したDeallogのファイルを保存するS3のBucket</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.accessInfoS3.folderName</td>
+<td>取得したDeallogのファイルを保存するS3のFolder</td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.accessInfoS3.filePrefix</td>
+<td>取得したDeallogのファイルを保存するFile接頭辞</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.accessInfoS3.fileExtension</td>
+<td>取得したDeallogのファイルを保存するFile拡張子</td>
 </tr>
 <tr class="even">
 <td>watchdog.periodMsec</td>
