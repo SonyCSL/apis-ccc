@@ -15,6 +15,7 @@
   - [**4.2. Deal Reporting**](#42-deal-reporting)
   - [**4.3. Scenario Acquisition**](#43-scenario-acquisition)
   - [**4.4. Policy Acquisition**](#44-policy-acquisition)
+  - [**4.5. Deallog Acquisition**](#45-deallog-acquisition)
 - [**5. Data Acquisition**](#5-data-acquisition)
   - [**5.1. Data Acquired by Unit Data Reporting**](#51-data-acquired-by-unit-data-reporting)
   - [**5.2. Data Acquired by Deal Reporting**](#52-data-acquired-by-deal-reporting)
@@ -165,6 +166,12 @@ The apis-ccc Policy Acquisition service receives requests for scenario files fro
 
 ![](media/media/image7.png)  
 Figure 4-4
+
+<br>
+
+## **4.5. Deallog Acquisition**
+
+The Deallog Acquisition　apis-ccc service acquires the power accommodation history information for one day in JSON format at the time set in deallogAcquisition.executionTime (see section 6.1 "config.json") once a day. Create the acquired information as a deal file and store it in an external service such as a server.
 
 <br>
 
@@ -624,6 +631,38 @@ The following basic information for configuring apis-ccc is set in a JSON-format
 <td>The timeout time for HTTP requests of the external server or other service that acquires the scenario file</td>
 </tr>
 <tr class="odd">
+<td>scenarioAcquisition.accessInfoS3.accessKey</td>
+<td>The S3 Access Key for acquires the scenario file</td>
+</tr>
+<tr class="even">
+<td>scenarioAcquisition.accessInfoS3.secretAccessKey</td>
+<td>The S3 Secret Access Key for acquires the scenario file</td>
+</tr>
+<tr class="odd">
+<td>scenarioAcquisition.accessInfoS3.regionName</td>
+<td>The S3 Region for acquires the scenario file</td>
+</tr>
+<tr class="even">
+<td>scenarioAcquisition.accessInfoS3.endpointUrl</td>
+<td>The S3 Endpoint for acquires the scenario file</td>
+</tr>
+<tr class="odd">
+<td>scenarioAcquisition.accessInfoS3.bucketName</td>
+<td>The S3 Bucket for acquires the scenario file</td>
+</tr>
+<tr class="even">
+<td>scenarioAcquisition.accessInfoS3.folderName</td>
+<td>The S3 Folder for acquires the scenario file</td>
+</tr>
+<tr class="odd">
+<td>scenarioAcquisition.accessInfoS3.filePrefix</td>
+<td>The Prefix of File for acquires the scenario file</td>
+</tr>
+<tr class="even">
+<td>scenarioAcquisition.accessInfoS3.fileExtension</td>
+<td>The Extension of File for acquires the scenario file</td>
+</tr>
+<tr class="odd">
 <td>policyAcquisition.host</td>
 <td>The IP address of the external server or other service that acquires the policy file</td>
 </tr>
@@ -649,6 +688,68 @@ The following basic information for configuring apis-ccc is set in a JSON-format
 <tr class="even">
 <td>watchdog.periodMsec</td>
 <td>Watchdog reset period (ms)</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.host</td>
+<td>The IP address of MongoDB for acquires the deallog</td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.port</td>
+<td>The port number of MongoDB for acquires the deallog</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.ssl</td>
+<td><p>The state of SSL communication for the external server of MongoDB for acquires the deallog</p>
+<p>&emsp;Enabled: True</p>
+<p>&emsp;Disabled: False</p></td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.database</td>
+<td>The Database Name of MongoDB for acquires the deallog</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.collection</td>
+<td>The Collection Name of MongoDB for acquires the deallog</td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.executionTime</td>
+<td>The execution time once a day for acquires the deallog（Format : HHmmss）</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.acquisitionTime</td>
+<td>The time of setting range for acquires the deallog（Format : HHmmss）</td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.accessInfoS3.accessKey</td>
+<td>The S3 Access Key for storage the acquired deallog file</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.accessInfoS3.secretAccessKey</td>
+<td>The S3 Secret Access Key for storage the acquired deallog file</td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.accessInfoS3.regionName</td>
+<td>The S3 Region for storage the acquired deallog file</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.accessInfoS3.endpointUrl</td>
+<td>The S3 Endpoint for storage the acquired deallog file</td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.accessInfoS3.bucketName</td>
+<td>The S3 Bucket for storage the acquired deallog file</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.accessInfoS3.folderName</td>
+<td>The S3 Folder for storage the acquired deallog file</td>
+</tr>
+<tr class="odd">
+<td>deallogAcquisition.accessInfoS3.filePrefix</td>
+<td>The Prefix of File for storage the acquired deallog file</td>
+</tr>
+<tr class="even">
+<td>deallogAcquisition.accessInfoS3.fileExtension</td>
+<td>The Extension of File for storage the acquired deallog file</td>
 </tr>
 <tr class="odd">
 <td>watchdog.host</td>
