@@ -5,6 +5,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import jp.co.sony.csl.dcoes.apis.common.util.vertx.AbstractStarter;
 import jp.co.sony.csl.dcoes.apis.tools.ccc.DealReporting;
+import jp.co.sony.csl.dcoes.apis.tools.ccc.DeallogAcquisition;
 import jp.co.sony.csl.dcoes.apis.tools.ccc.PolicyAcquisition;
 import jp.co.sony.csl.dcoes.apis.tools.ccc.ScenarioAcquisition;
 import jp.co.sony.csl.dcoes.apis.tools.ccc.UnitDataReporting;
@@ -42,8 +43,14 @@ public class Starter extends AbstractStarter {
 							if (resScenarioAcquisition.succeeded()) {
 								vertx.deployVerticle(new PolicyAcquisition(), resPolicyAcquisition -> {
 									if (resPolicyAcquisition.succeeded()) {
-										completionHandler.handle(Future.succeededFuture());
-									} else {
+										vertx.deployVerticle(new DeallogAcquisition(), resDeallogAcquisition -> {
+											if (resDeallogAcquisition.succeeded()){
+												completionHandler.handle(Future.succeededFuture());
+											} else {
+												completionHandler.handle(Future.failedFuture(resDeallogAcquisition.cause()));
+											}
+										});
+									}else {
 										completionHandler.handle(Future.failedFuture(resPolicyAcquisition.cause()));
 									}
 								});
